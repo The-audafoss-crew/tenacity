@@ -1,11 +1,8 @@
 #[[
 
-  Audacity: A Digital Audio Editor
+  Tenacity: A Digital Audio Editor
 
   Experimental.cmake
-
-  Dominic Mazzoni
-  James Crook
 
   Used at configuration time to generate compiler options that enable or disable
   experimental features.
@@ -14,7 +11,7 @@
 
   JKC: This file solves a problem of how to avoid forking the
   code base when working on NEW features e.g:
-    - Additional displays in Audacity
+    - Additional displays in Tenacity
     - Modular architecture.
   Add options in here for the NEW features, and make your code
   conditional on them with #ifdef.
@@ -121,7 +118,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # RBD, 1 Sep 2008
    # Enables MIDI Output of NoteTrack (MIDI) data during playback
    # USE_MIDI must be defined in order for MIDI_OUT to work
-   MIDI_OUT
+   #MIDI_OUT
 
    # JKC, 17 Aug 2017
    # Enables the MIDI note stretching feature, which currently

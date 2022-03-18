@@ -38,6 +38,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
+#include "../FileNames.h"
 
 using namespace FileNames;
 using namespace TempDirectory;
@@ -51,12 +52,12 @@ public:
       mMessage = message;
    }
 
-   virtual wxObject* Clone() const wxOVERRIDE
+   virtual wxObject* Clone() const override
    {
       return safenew FilesystemValidator(mMessage);
    }
 
-   virtual bool Validate(wxWindow* WXUNUSED(parent)) wxOVERRIDE
+   virtual bool Validate(wxWindow* WXUNUSED(parent)) override
    {
       wxTextCtrl* tc = wxDynamicCast(GetWindow(), wxTextCtrl);
       if (!tc) {
@@ -70,12 +71,12 @@ public:
       return true;
    }
 
-   virtual bool TransferToWindow() wxOVERRIDE
+   virtual bool TransferToWindow() override
    {
       return true;
    }
 
-   virtual bool TransferFromWindow() wxOVERRIDE
+   virtual bool TransferFromWindow() override
    {
       return true;
    }
@@ -267,22 +268,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
    S.EndScroller();
 }
 
-bool WritableLocationCheck(const FilePath &path)
-{
-   bool Status = wxFileName ::IsDirWritable(path);
-   if (!Status)
-   {
-      AudacityMessageBox(
-         XO("Directory %s does not have write permissions")
-            .Format(path),
-         XO("Error"),
-            wxOK | wxICON_ERROR);
-      return true;
-   }
-
-   return false;
-}
-
 void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
 {
    wxString oldTemp = gPrefs->Read(PreferenceKey(Operation::Open, PathType::_None),
@@ -311,7 +296,7 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
          return;
       }
 
-      if (WritableLocationCheck(dlog.GetPath())) 
+      if (!FileNames::WritableLocationCheck(dlog.GetPath()))
       {
          return;
       }
@@ -392,7 +377,7 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       }
    }
 
-   if (WritableLocationCheck(dlog.GetPath())) 
+   if (!FileNames::WritableLocationCheck(dlog.GetPath()))
    {
       return;
    }
@@ -433,6 +418,10 @@ bool DirectoriesPrefs::Validate()
    }
    else {
       /* If the directory already exists, make sure it is writable */
+      if (!FileNames::WritableLocationCheck(mTempText->GetValue()))
+      {
+          return false;
+      }
       wxLogNull logNo;
       Temp.AppendDir(wxT("canicreate"));
       path =  Temp.GetPath();
@@ -456,6 +445,19 @@ bool DirectoriesPrefs::Validate()
 "Changes to temporary directory will not take effect until Audacity is restarted"),
          XO("Temp Directory Update"),
          wxOK | wxCENTRE | wxICON_INFORMATION);
+   }
+
+   const wxString macroPathString = mMacrosText->GetValue();
+
+   if (!macroPathString.empty())
+   {
+      const wxFileName macroPath { macroPathString };
+
+      if (macroPath.DirExists())
+      {
+         if (!FileNames::WritableLocationCheck(macroPathString))
+            return false;
+      }
    }
 
    return true;

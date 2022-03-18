@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   ModuleManager.cpp
 
@@ -20,7 +20,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 
 #include "ModuleManager.h"
-#include "audacity/ModuleInterface.h"
+#include "tenacity/ModuleInterface.h"
 
 
 
@@ -32,7 +32,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "FileNames.h"
 #include "MemoryX.h"
 
-#include "audacity/PluginInterface.h"
+#include "tenacity/PluginInterface.h"
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"

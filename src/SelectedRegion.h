@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   SelectedRegion.h
 
@@ -35,7 +35,7 @@
 
 class XMLWriter;
 
-class AUDACITY_DLL_API SelectedRegion {
+class TENACITY_DLL_API SelectedRegion {
 
    // Maintains the invariant:  t1() >= t0()
 

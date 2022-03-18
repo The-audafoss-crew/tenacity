@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   PluginManager.cpp
 
@@ -28,9 +28,9 @@ for shared and private configs - which need to move out.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
-#include "audacity/ModuleInterface.h"
+#include "tenacity/ModuleInterface.h"
 
-#include "AudacityFileConfig.h"
+#include "TenacityFileConfig.h"
 #include "Internat.h" // for macro XO
 #include "FileNames.h"
 #include "MemoryX.h"
@@ -436,18 +436,6 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer)
-{
-   PluginDescriptor & plug = CreatePlugin(GetID(importer), importer, PluginTypeImporter);
-
-   plug.SetProviderID(PluginManager::GetID(provider));
-
-   plug.SetImporterIdentifier(importer->GetPluginStringID());
-   plug.SetImporterExtensions(importer->GetSupportedExtensions());
-
-   return plug.GetID();
-}
-
 void PluginManager::FindFilesInPathList(const wxString & pattern,
                                         const FilePaths & pathList,
                                         FilePaths & files,
@@ -475,7 +463,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    // Add the "Audacity" plug-ins directory
    wxFileName ff = PlatformCompatibility::GetExecutablePath();
 #if defined(__WXMAC__)
-   // Path ends for example in "Audacity.app/Contents/MacOSX"
+   // Path ends for example in "Tenacity.app/Contents/MacOSX"
    //ff.RemoveLastDir();
    //ff.RemoveLastDir();
    // just remove the MacOSX part.
@@ -877,7 +865,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   auto pRegistry = AudacityFileConfig::Create(
+   auto pRegistry = TenacityFileConfig::Create(
       {}, {}, FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
@@ -1219,7 +1207,7 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   auto pRegistry = AudacityFileConfig::Create(
+   auto pRegistry = TenacityFileConfig::Create(
       {}, {}, FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
@@ -1559,6 +1547,11 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
    }
 }
 
+PluginID PluginManager::GetID(ModuleInterface *module)
+{
+   return ModuleManager::GetID(module);
+}
+
 PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
@@ -1577,16 +1570,6 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
                            effect->GetVendor().Internal(),
                            effect->GetSymbol().Internal(),
                            effect->GetPath());
-}
-
-PluginID PluginManager::GetID(ImporterInterface *importer)
-{
-   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeImporter),
-                           wxEmptyString,
-                           importer->GetVendor().Internal(),
-                           importer->GetSymbol().Internal(),
-                           importer->GetPath());
 }
 
 // This string persists in configuration files
@@ -1608,7 +1591,7 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
       str = wxT("Effect");
       break;
    case PluginTypeAudacityCommand:
-      str = wxT("Generic");
+      str = wxT("Module");
       break;
    case PluginTypeExporter:
       str = wxT("Exporter");
@@ -1647,7 +1630,7 @@ FileConfig *PluginManager::GetSettings()
    if (!mSettings)
    {
       mSettings =
-         AudacityFileConfig::Create({}, {}, FileNames::PluginSettings());
+         TenacityFileConfig::Create({}, {}, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   AColor.h
 
@@ -22,7 +22,7 @@ class wxDC;
 class wxGraphicsContext;
 class wxRect;
 
-class AUDACITY_DLL_API AColor {
+class TENACITY_DLL_API AColor {
  public:
 
     enum ColorGradientChoice {

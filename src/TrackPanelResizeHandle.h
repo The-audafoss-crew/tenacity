@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 TrackPanelResizeHandle.h
 
@@ -58,9 +58,9 @@ private:
 
    bool mInitialMinimized{};
    int mInitialTrackHeight{};
-   int mInitialActualHeight{};
+   int mInitialExpandedHeight{};
    int mInitialUpperTrackHeight{};
-   int mInitialUpperActualHeight{};
+   int mInitialUpperExpandedHeight{};
 
    int mMouseClickY{};
 };

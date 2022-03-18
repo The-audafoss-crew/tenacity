@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 ProjectSelectionManager.cpp
 
@@ -14,10 +14,11 @@ Paul Licameli split from ProjectManager.cpp
 #include "ClientData.h" // to inherit
 #include "toolbars/SelectionBarListener.h" // to inherit
 #include "toolbars/SpectralSelectionBarListener.h" // to inherit
+#include "ComponentInterfaceSymbol.h"
 
 class AudacityProject;
 
-class AUDACITY_DLL_API ProjectSelectionManager final
+class TENACITY_DLL_API ProjectSelectionManager final
    : public ClientData::Base
    , public SelectionBarListener
    , public SpectralSelectionBarListener

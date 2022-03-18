@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 ProjectAudioManager.cpp
 
@@ -341,10 +341,6 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    projectAudioManager.SetLooping( false );
    projectAudioManager.SetCutting( false );
 
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      gAudioIO->AILADisable();
-   #endif
-
    projectAudioManager.SetPaused( false );
    //Make sure you tell gAudioIO to unpause
    gAudioIO->SetPaused( false );
@@ -520,9 +516,10 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             }
 
             existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
-            t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
+            if(!existingTracks.empty())
+                t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
             // If suitable tracks still not found, will record into NEW ones,
-            // but the choice of t0 does not depend on that.
+            // starting with t0
          }
          
          // Whether we decided on NEW tracks or not:
@@ -641,14 +638,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
             if (endTime <= t0) {
-
-               // Pad the recording track with silence, up to the
-               // maximum time.
-               auto newTrack = pending->EmptyCopy();
-               newTrack->InsertSilence(0.0, t0 - endTime);
-               newTrack->Flush();
-               pending->Clear(endTime, t0);
-               pending->Paste(endTime, newTrack.get());
+               pending->CreateClip(t0);
             }
             transportTracks.captureTracks.push_back(pending);
          }
@@ -732,17 +722,12 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
             transportTracks.captureTracks.push_back(newTrack);
          }
-         TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
+         TrackList::Get( *p ).MakeMultiChannelTrack(*first, recordingChannels, true);
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(*p).Set(first);
          if (TrackList::Get(*p).back())
             TrackList::Get(*p).back()->EnsureVisible();
       }
-
-      //Automated Input Level Adjustment Initialization
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         gAudioIO->AILAInitialize();
-      #endif
 
       int token = gAudioIO->StartStream(transportTracks, t0, t1, options);
 

@@ -1,6 +1,6 @@
 
 set( TARGET nyquist )
-set( TARGET_ROOT ${topdir}/nyquist )
+set( TARGET_ROOT ${CMAKE_SOURCE_DIR}/nyquist )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
@@ -61,7 +61,7 @@ foreach( source ${RUNTIME} )
    # Fix this when reorganizing the Nyquist sources
    if( source STREQUAL "system.lsp" )
       if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-         set( src "${libsrc}/libnyquist/nyquist/sys/win/msvc/system.lsp" )
+         set( src "${CMAKE_SOURCE_DIR}/lib-src/libnyquist/nyquist/sys/win/msvc/system.lsp" )
       endif()
    endif()
 
@@ -83,7 +83,7 @@ endforeach()
 add_custom_target( ${TARGET} ALL DEPENDS ${OUTPUTS} SOURCES ${SOURCES} )
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
+   if( NOT WIN32)
       install( DIRECTORY "${_DEST}/${TARGET}"
                DESTINATION "${_PKGDATA}" )
    endif()

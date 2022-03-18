@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   Registrar.h
 
@@ -29,7 +29,7 @@ class LoadableModule;
 class ComponentInterface;
 class Effect;
 
-class AUDACITY_DLL_API Registrar 
+class TENACITY_DLL_API Registrar 
 {
 public:
    Registrar(){

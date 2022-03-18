@@ -1,6 +1,6 @@
 
 set( TARGET plug-ins )
-set( TARGET_ROOT ${topdir}/plug-ins )
+set( TARGET_ROOT ${CMAKE_SOURCE_DIR}/plug-ins )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
@@ -59,7 +59,7 @@ endforeach()
 add_custom_target( ${TARGET} ALL DEPENDS ${OUTPUTS} SOURCES ${SOURCES} )
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
+   if( NOT WIN32)
       install( DIRECTORY "${_DEST}/${TARGET}"
                DESTINATION "${_PKGDATA}" )
    endif()

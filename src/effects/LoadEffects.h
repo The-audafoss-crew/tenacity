@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_LOAD_EFFECTS__
 #define __AUDACITY_LOAD_EFFECTS__
 
-#include "audacity/ModuleInterface.h"
+#include "tenacity/ModuleInterface.h"
 
 #include <functional>
 #include <memory>
@@ -26,7 +26,7 @@ class Effect;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
+class TENACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
 {
 public:
    BuiltinEffectsModule();

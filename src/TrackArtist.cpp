@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   TrackArtist.cpp
 
@@ -55,6 +55,9 @@ audio tracks.
 #include "prefs/TracksPrefs.h"
 
 #include <wx/dc.h>
+
+//Thickness of the clip frame outline, shown when clip is dragged
+static constexpr int ClipSelectionStrokeSize{ 1 };//px
 
 TrackArtist::TrackArtist( TrackPanel *parent_ )
    : parent( parent_ )
@@ -260,6 +263,60 @@ void TrackArtist::UpdatePrefs()
    SetColours(0);
 }
 
+void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight, bool selected)
+{
+   if (selected)
+   {
+      wxRect strokeRect{
+         rect.x - ClipSelectionStrokeSize,
+         rect.y,
+         rect.width + ClipSelectionStrokeSize * 2,
+         rect.height + ClipFrameRadius };
+      dc.SetBrush(*wxTRANSPARENT_BRUSH);
+      AColor::UseThemeColour(&dc, clrClipAffordanceStroke, clrClipAffordanceStroke);
+      dc.DrawRoundedRectangle(strokeRect, ClipFrameRadius);
+   }
+   AColor::UseThemeColour(&dc, highlight ? clrClipAffordanceActiveBrush : clrClipAffordanceInactiveBrush, clrClipAffordanceOutlinePen);
+   dc.DrawRoundedRectangle(wxRect(rect.x, rect.y + ClipSelectionStrokeSize, rect.width, rect.height + ClipFrameRadius), ClipFrameRadius);
+}
+
+void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
+{
+   dc.SetBrush(*wxTRANSPARENT_BRUSH);
+   {
+      AColor::UseThemeColour(&dc, -1, clrClipAffordanceOutlinePen);
+      AColor::Line(dc,
+         clipRect.GetLeft(), clipRect.GetTop(),
+         clipRect.GetLeft(), clipRect.GetBottom());
+      AColor::Line(dc,
+         clipRect.GetRight(), clipRect.GetTop(),
+         clipRect.GetRight(), clipRect.GetBottom());
+   }
+   if(selected)
+   {
+      if constexpr (ClipSelectionStrokeSize == 1)
+      {
+         AColor::UseThemeColour(&dc, -1, clrClipAffordanceStroke);
+         AColor::Line(dc,
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetTop(),
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetBottom());
+         AColor::Line(dc,
+            clipRect.GetRight() + ClipSelectionStrokeSize, clipRect.GetTop(),
+            clipRect.GetRight() + ClipSelectionStrokeSize, clipRect.GetBottom());
+      }
+      else if constexpr (ClipSelectionStrokeSize > 1)
+      {
+         AColor::UseThemeColour(&dc, clrClipAffordanceStroke, clrClipAffordanceStroke);
+         dc.DrawRectangle(wxRect(
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetTop(),
+            ClipSelectionStrokeSize, clipRect.GetHeight()));
+         dc.DrawRectangle(wxRect(
+            clipRect.GetRight() + 1, clipRect.GetTop(),
+            ClipSelectionStrokeSize, clipRect.GetHeight()));
+      }
+   }
+}
+
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
 //
 // AWD: now that the tiles don't link together, we're drawing a tilted grid, at
@@ -277,12 +334,18 @@ void TrackArt::DrawSyncLockTiles(
    TrackPanelDrawingContext &context, const wxRect &rect )
 {
    const auto dc = &context.dc;
+   dc->SetBrush(*wxTRANSPARENT_BRUSH);
+   dc->SetPen( wxPen( theTheme.Colour( clrSelected )) );
+ //  AColor::Line(*dc, rect.x, rect.y, rect.x, rect.height);
+//   AColor::Line(*dc, rect.width, rect.y, rect.width, rect.height);
+//   dc->DrawRectangle(rect.x, rect.y, rect.width, rect.height);
+   dc->SetPen(*wxTRANSPARENT_PEN);
 
    wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockSelTile));
 
    // Grid spacing is a bit smaller than actual image size
-   int gridW = syncLockBitmap.GetWidth() - 6;
-   int gridH = syncLockBitmap.GetHeight() - 8;
+   int gridW = syncLockBitmap.GetWidth();
+   int gridH = syncLockBitmap.GetHeight() - 2;
 
    // Horizontal position within the grid, modulo its period
    int blockX = (rect.x / gridW) % 5;
@@ -337,12 +400,6 @@ void TrackArt::DrawSyncLockTiles(
          if (yy + height > rect.height)
             height = rect.height - yy;
 
-         // AWD: draw blocks according to our pattern
-         if ((blockX == 0 && blockY == 0) || (blockX == 2 && blockY == 1) ||
-             (blockX == 4 && blockY == 2) || (blockX == 1 && blockY == 3) ||
-             (blockX == 3 && blockY == 4))
-         {
-
             // Do we need to get a sub-bitmap?
             if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
                wxBitmap subSyncLockBitmap =
@@ -352,7 +409,6 @@ void TrackArt::DrawSyncLockTiles(
             else {
                dc->DrawBitmap(syncLockBitmap, rect.x + xx, rect.y + yy, true);
             }
-         }
 
          // Updates for next row
          if (extraRow) {

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   Snap.h
 
@@ -52,7 +52,7 @@ struct SnapResults {
    bool Snapped() const { return snappedPoint || snappedTime; }
 };
 
-class AUDACITY_DLL_API SnapManager
+class TENACITY_DLL_API SnapManager
 {
 public:
    SnapManager(const AudacityProject &project,

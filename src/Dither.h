@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   Steve Harris
   Markus Meyer
@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_DITHER_H__
 #define __AUDACITY_DITHER_H__
 
-#include "audacity/Types.h" // for samplePtr
+#include "tenacity/Types.h" // for samplePtr
 
 template< typename Enum > class EnumSetting;
 
@@ -25,7 +25,7 @@ public:
     static DitherType FastDitherChoice();
     static DitherType BestDitherChoice();
 
-    static AUDACITY_DLL_API EnumSetting< DitherType > FastSetting, BestSetting;
+    static TENACITY_DLL_API EnumSetting< DitherType > FastSetting, BestSetting;
 
     /// Default constructor
     Dither();

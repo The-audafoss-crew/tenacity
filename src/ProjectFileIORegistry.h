@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   ProjectFileIORegistry.h
 
@@ -24,7 +24,7 @@ using TagHandlerFactory =
    std::function< XMLTagHandler *( AudacityProject & ) >;
 
 // Typically statically constructed
-struct AUDACITY_DLL_API Entry{
+struct TENACITY_DLL_API Entry{
    Entry( const wxString &tag, const TagHandlerFactory &factory );
 };
 

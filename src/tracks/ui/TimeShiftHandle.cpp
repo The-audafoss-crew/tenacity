@@ -34,6 +34,21 @@ TimeShiftHandle::TimeShiftHandle
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
+std::shared_ptr<Track> TimeShiftHandle::GetTrack() const
+{
+   return mClipMoveState.mCapturedTrack;
+}
+
+bool TimeShiftHandle::WasMoved() const
+{
+    return mDidSlideVertically || (mClipMoveState.initialized && mClipMoveState.wasMoved);
+}
+
+bool TimeShiftHandle::Clicked() const
+{
+   return mClipMoveState.initialized;
+}
+
 void TimeShiftHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -275,6 +290,8 @@ void ClipMoveState::Init(
 {
    shifters.clear();
 
+   initialized = true;
+
    auto &state = *this;
    state.mCapturedTrack = capturedTrack.SharedPointer();
 
@@ -427,6 +444,9 @@ double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
    if ( desiredSlideAmount != 0.0 )
       state.DoHorizontalOffset( desiredSlideAmount );
 
+   //attempt to move a clip is counted to
+   wasMoved = true;
+
    return (state.hSlideAmount = desiredSlideAmount);
 }
 
@@ -498,13 +518,14 @@ UIHandle::Result TimeShiftHandle::Click
       // just do shifting of one whole track
    }
 
+   bool syncLocked = (event.AltDown()) ? false : ProjectSettings::Get( *pProject ).IsSyncLocked();
+
    mClipMoveState.Init( *pProject, *pTrack,
       hitTestResult,
       std::move( pShifter ),
       clickTime,
 
-      viewInfo, trackList,
-      ProjectSettings::Get( *pProject ).IsSyncLocked() );
+      viewInfo, trackList, syncLocked);
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
@@ -601,6 +622,10 @@ namespace {
       TrackList &trackList, Track &capturedTrack, Track &track,
       ClipMoveState &state)
    {
+      if (state.shifters.empty())
+         // Shift + Dragging hasn't yet supported vertical movement
+         return false;
+
       // Accumulate new pairs for the correspondence, and merge them
       // into the given correspondence only on success
       Correspondence newPairs;
@@ -936,6 +961,8 @@ UIHandle::Result TimeShiftHandle::Release
    if (mDidSlideVertically) {
       msg = XO("Moved clips to another track");
       consolidate = false;
+      for (auto& pair : mClipMoveState.shifters)
+         pair.first->LinkConsistencyCheck();
    }
    else {
       msg = ( mClipMoveState.hSlideAmount > 0

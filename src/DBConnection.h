@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 @file DBConnection.h
 @brief Declare DBConnection, which maintains database connection and associated status and background thread
@@ -132,7 +132,7 @@ private:
     Commit() must not be called again after one successful call.
     An exception is thrown from the constructor if the transaction cannot open.
  */
-class AUDACITY_DLL_API TransactionScope
+class TENACITY_DLL_API TransactionScope
 {
 public:
    TransactionScope(DBConnection &connection, const char *name);

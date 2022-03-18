@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_LOAD_COMMANDS__
 #define __AUDACITY_LOAD_COMMANDS__
 
-#include "audacity/ModuleInterface.h"
+#include "tenacity/ModuleInterface.h"
 
 #include <functional>
 #include <memory>
@@ -27,7 +27,7 @@ class AudacityCommand;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API BuiltinCommandsModule final : public ModuleInterface
+class TENACITY_DLL_API BuiltinCommandsModule final : public ModuleInterface
 {
 public:
    BuiltinCommandsModule();

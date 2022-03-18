@@ -198,7 +198,7 @@ EffectFamilySymbol Effect::GetFamily()
 
    // Unusually, the internal and visible strings differ for the built-in
    // effect family.
-   return { wxT("Audacity"), XO("Built-in") };
+   return { wxT("Tenacity"), XO("Built-in") };
 }
 
 bool Effect::IsInteractive()
@@ -1711,7 +1711,7 @@ bool Effect::ProcessTrack(int count,
       {
          processed = ProcessBlock(inBufPos.get(), outBufPos.get(), curBlockSize);
       }
-      catch( const AudacityException & WXUNUSED(e) )
+      catch( const TenacityException & WXUNUSED(e) )
       {
          // PRL: Bug 437:
          // Pass this along to our application-level handler
@@ -2395,8 +2395,8 @@ void Effect::Preview(bool dryOnly)
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->SetSelected(true);
          pRight = mTracks->Add( mixRight );
+         mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
       }
-      mTracks->GroupChannels(*pLeft, pRight ? 2 : 1);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {

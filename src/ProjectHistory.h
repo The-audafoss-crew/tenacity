@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 ProjectHistory.h
 
@@ -17,7 +17,7 @@ class AudacityProject;
 struct UndoState;
 enum class UndoPush : unsigned char;
 
-class AUDACITY_DLL_API ProjectHistory final
+class TENACITY_DLL_API ProjectHistory final
    : public ClientData::Base
 {
 public:

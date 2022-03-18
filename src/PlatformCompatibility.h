@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   PlatformCompatibility.h
 
@@ -22,7 +22,7 @@
 
 #include "Identifier.h"
 
-class AUDACITY_DLL_API PlatformCompatibility
+class TENACITY_DLL_API PlatformCompatibility
 {
 public:
    //
@@ -34,8 +34,8 @@ public:
    static FilePath GetLongFileName(const FilePath& shortFileName);
 
    //
-   // Get filename and path of executable (e.g. "/usr/bin/audacity" on
-   // Linux or "C:\Program Files\Audacity\Audacity.exe" on Windows)
+   // Get filename and path of executable (e.g. "/usr/bin/tenacity" on
+   // Linux or "C:\Program Files\Tenacity\Tenacity.exe" on Windows)
    // This string is unchanging
    //
    static const FilePath &GetExecutablePath();

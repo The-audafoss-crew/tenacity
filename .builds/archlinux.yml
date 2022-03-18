@@ -1,0 +1,31 @@
+image: archlinux
+packages:
+  - cmake
+  - ffmpeg
+  - flac
+  - gdk-pixbuf2
+  - gtk3
+  - libid3tag
+  - libmad
+  - libogg
+  - libsndfile
+  - libsoxr
+  - libvorbis
+  - lilv
+  - ninja
+  - portaudio
+  - portmidi
+  - portsmf
+  - soundtouch
+  - suil
+  - twolame
+  - vamp-plugin-sdk
+  - webkit2gtk
+  - wxgtk3
+environment:
+  WX_CONFIG: /usr/bin/wx-config-gtk3
+sources:
+  - https://git.sr.ht/~tenacity/tenacity
+tasks:
+  - configure: cmake -G Ninja -S tenacity -B build
+  - build: cmake --build build

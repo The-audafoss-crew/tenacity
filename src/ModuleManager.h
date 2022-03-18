@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   ModuleManager.h
 
@@ -17,7 +17,7 @@
 #include <map>
 #include <vector>
 
-#include "audacity/Types.h"
+#include "tenacity/Types.h"
 #include "Identifier.h"
 
 class wxArrayString;
@@ -68,7 +68,7 @@ typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 using PluginIDs = wxArrayString;
 
-class AUDACITY_DLL_API ModuleManager final
+class TENACITY_DLL_API ModuleManager final
 {
 public:
 
@@ -143,9 +143,9 @@ private:
 // ----------------------------------------------------------------------------
 using ModuleMain = ModuleInterface *(*)();
 
-AUDACITY_DLL_API
+TENACITY_DLL_API
 void RegisterProvider(ModuleMain rtn);
-AUDACITY_DLL_API
+TENACITY_DLL_API
 void UnregisterProvider(ModuleMain rtn);
 
 // Guarantee the registry exists before any registrations, so it will

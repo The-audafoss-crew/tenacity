@@ -1,6 +1,6 @@
 /*!*********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   @file PluginRegistrationDialog.cpp
 
@@ -9,7 +9,7 @@
 **********************************************************************/
 #include "PluginRegistrationDialog.h"
 
-#include "audacity/EffectInterface.h"
+#include "tenacity/EffectInterface.h"
 #include "ModuleManager.h"
 #include "PluginManager.h"
 #include "ShuttleGui.h"

@@ -16,7 +16,7 @@
 #include <vector>
 
 #include <unordered_map>
-#include "audacity/EffectInterface.h"
+#include "tenacity/EffectInterface.h"
 #include "Identifier.h"
 
 class AudacityCommand;
@@ -42,7 +42,7 @@ class AudacityCommand;
 
 class NotifyingSelectedRegion;
 
-class AUDACITY_DLL_API EffectManager
+class TENACITY_DLL_API EffectManager
 {
 public:
 

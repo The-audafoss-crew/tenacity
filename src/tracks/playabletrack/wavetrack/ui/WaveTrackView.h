@@ -14,15 +14,16 @@ Paul Licameli split from class WaveTrack
 #include "../../../ui/CommonTrackView.h"
 #include "../../../../ClientData.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
-#include "audacity/Types.h"
+#include "tenacity/Types.h"
 struct WaveTrackSubViewType;
 
 class CutlineHandle;
 class TranslatableString;
 class WaveTrack;
 class WaveTrackView;
+class WaveClip;
 
-class AUDACITY_DLL_API WaveTrackSubView : public CommonTrackView
+class TENACITY_DLL_API WaveTrackSubView : public CommonTrackView
 {
 public:
 
@@ -47,8 +48,11 @@ protected:
       TrackPanelDrawingContext &context, const WaveTrack *track,
       const wxRect &rect );
 
+   std::weak_ptr<WaveTrackView> GetWaveTrackView() const;
+
 private:
    std::weak_ptr<UIHandle> mCloseHandle;
+   std::weak_ptr<UIHandle> mResizeHandle;
    std::weak_ptr<UIHandle> mAdjustHandle;
    std::weak_ptr<UIHandle> mRearrangeHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;
@@ -66,7 +70,7 @@ using WaveTrackSubViews = ClientData::Site<
    WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
 >;
 
-class AUDACITY_DLL_API WaveTrackView final
+class TENACITY_DLL_API WaveTrackView final
    : public CommonTrackView
    , public WaveTrackSubViews
 {
@@ -74,6 +78,8 @@ class AUDACITY_DLL_API WaveTrackView final
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
 
 public:
+   static constexpr int kChannelSeparatorThickness{ 8 };
+
    using Display = WaveTrackViewConstants::Display;
 
    static WaveTrackView &Get( WaveTrack &track );
@@ -122,6 +128,18 @@ public:
    bool GetMultiView() const { return mMultiView; }
    void SetMultiView( bool value ) { mMultiView = value; }
 
+
+   std::weak_ptr<WaveClip> GetSelectedClip();
+
+   // Returns a visible subset of subviews, sorted in the same 
+   // order as they are supposed to be displayed
+   
+
+   // Get the visible sub-views,
+   // if rect is provided then result will contain
+   // y coordinate for each subview within this rect
+   Refinement GetSubViews(const wxRect* rect = nullptr);
+
 private:
    void BuildSubViews() const;
    void DoSetDisplay(Display display, bool exclusive = true);
@@ -137,10 +155,11 @@ private:
       override;
 
    // TrackView implementation
-   // Get the visible sub-views with top y coordinates
-   Refinement GetSubViews( const wxRect &rect ) override;
+   Refinement GetSubViews(const wxRect& rect) override;
 
 protected:
+   std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
+
    void DoSetMinimized( bool minimized ) override;
 
    // Placements are in correspondence with the array of sub-views
@@ -150,6 +169,11 @@ protected:
    mutable wxCoord mLastHeight{};
 
    bool mMultiView{ false };
+
+private:
+   std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
+
+   std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
 };
 
 // Helper for drawing routines
@@ -157,7 +181,7 @@ class SelectedRegion;
 class WaveClip;
 class ZoomInfo;
 
-struct AUDACITY_DLL_API ClipParameters
+struct TENACITY_DLL_API ClipParameters
 {
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters
@@ -188,7 +212,9 @@ struct AUDACITY_DLL_API ClipParameters
    wxRect mid;
    int leftOffset;
 
-   void DrawClipEdges( wxDC &dc, const wxRect &rect ) const;
+   // returns a clip rectangle restricted by viewRect, 
+   // and with clipOffsetX - clip horizontal origin offset within view rect
+   static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, int clipOffsetX = 0);
 };
 
 #endif

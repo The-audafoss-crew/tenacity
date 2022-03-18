@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   TimeDialog.h
 
@@ -13,14 +13,14 @@
 
 #include <wx/defs.h>
 
-#include "audacity/ComponentInterface.h" // member variable
+#include "tenacity/ComponentInterface.h" // member variable
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 class NumericTextCtrl;
 class ShuttleGui;
 
-class AUDACITY_DLL_API TimeDialog final : public wxDialogWrapper
+class TENACITY_DLL_API TimeDialog final : public wxDialogWrapper
 {
  public:
 

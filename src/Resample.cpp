@@ -1,6 +1,6 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
+   Tenacity
    Audacity(R) is copyright (c) 1999-2012 Audacity Team.
    License: GPL v2.  See License.txt.
 
@@ -25,7 +25,7 @@
 #include "Resample.h"
 #include "Prefs.h"
 #include "Internat.h"
-#include "../include/audacity/ComponentInterface.h"
+#include "../include/tenacity/ComponentInterface.h"
 
 #include <soxr.h>
 

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   FileIO.h
 
@@ -18,7 +18,7 @@ class wxOutputStream;
 class wxFFileOutputStream;
 class wxFileNameWrapper;
 
-class AUDACITY_DLL_API FileIO
+class TENACITY_DLL_API FileIO
 {
  public:
    typedef enum FileIOMode

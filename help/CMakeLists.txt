@@ -1,6 +1,5 @@
-
 set( TARGET manual )
-set( TARGET_ROOT ${topdir}/manual )
+set( TARGET_ROOT ${CMAKE_SOURCE_DIR}/manual )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
@@ -14,7 +13,7 @@ endif()
 set( host "alphamanual.audacityteam.org" )
 set( src "https://${host}/man" )
 set( dst "${_DEST}/help/manual" )
-set( script_dir "${topdir}/scripts/mw2html_audacity" )
+set( script_dir "${CMAKE_SOURCE_DIR}/scripts/mw2html_audacity" )
 set( script "mw2html.py" )
 set( out_dir "${_INTDIR}" )
 set( out "${out_dir}/${host}/index.html" )
@@ -49,12 +48,28 @@ if( ${_OPT}package_manual )
 endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
+   if( NOT WIN32)
       install( DIRECTORY "${dst}" OPTIONAL
-               DESTINATION "${_DATADIR}/audacity/help" )
-      install( FILES "${_SRCDIR}/audacity.1"
-               DESTINATION "${_MANDIR}/man1" )
-      install( FILES "${_SRCDIR}/audacity.appdata.xml"
+               DESTINATION "${_DATADIR}/tenacity/help" )
+
+      install( FILES "${_SRCDIR}/org.tenacityaudio.Tenacity.metainfo.xml"
                DESTINATION "${_DATADIR}/metainfo" )
    endif()
+endif()
+
+# Test if scdoc is installed
+find_program(SCDOC_CMD scdoc)
+
+cmake_dependent_option(BUILD_MANPAGE "Build manpage" ON "NOT SCDOC_CMD STREQUAL SCDOC_CMD-NOTFOUND" OFF)
+
+if( BUILD_MANPAGE )
+   add_custom_command( COMMENT "Generating manpage"
+      COMMAND ${SCDOC_CMD} < "${_SRCDIR}/tenacity.1.scd" > "${CMAKE_BINARY_DIR}/help/tenacity.1"
+      DEPENDS "${_SRCDIR}/tenacity.1.scd"
+      OUTPUT "${CMAKE_BINARY_DIR}/help/tenacity.1" )
+
+   add_custom_target( gen_manpage ALL DEPENDS "${CMAKE_BINARY_DIR}/help/tenacity.1")
+
+   install( FILES "${CMAKE_BINARY_DIR}/help/tenacity.1"
+            DESTINATION "${_MANDIR}/man1" )
 endif()

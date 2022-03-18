@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   ShuttleGetDefinition.cpp
 
@@ -9,6 +9,7 @@
 **********************************************************************/
 
 #include "ShuttleGetDefinition.h"
+#include "ComponentInterfaceSymbol.h"
 
 bool ShuttleGetDefinition::IsOptional(){
    bool result = pOptionalFlag !=NULL;

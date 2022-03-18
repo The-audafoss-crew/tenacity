@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   ShuttleGetDefinition.h
 
@@ -17,7 +17,7 @@
 /**************************************************************************//**
 \brief Shuttle that retrieves a JSON format definition of a command's parameters.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleGetDefinition final
+class TENACITY_DLL_API ShuttleGetDefinition final
    : public ShuttleParams, public CommandMessageTargetDecorator
 {
 public:

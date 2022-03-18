@@ -48,7 +48,7 @@ but little else.
 
 
 #include <memory>
-#include "audacity/Types.h"
+#include "tenacity/Types.h"
 #include "Identifier.h"
 #include "Internat.h"
 #include "wxArrayStringEx.h"
@@ -62,7 +62,7 @@ class Tags;
 
 class ImportFileHandle;
 
-class AUDACITY_DLL_API ImportPlugin /* not final */
+class TENACITY_DLL_API ImportPlugin /* not final */
 {
 public:
 
@@ -102,7 +102,7 @@ protected:
 class WaveTrack;
 using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
 
-class AUDACITY_DLL_API ImportFileHandle /* not final */
+class TENACITY_DLL_API ImportFileHandle /* not final */
 {
 public:
    ImportFileHandle(const FilePath & filename);

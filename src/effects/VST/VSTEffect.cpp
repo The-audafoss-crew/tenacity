@@ -30,16 +30,6 @@
 
 #include "../../widgets/ProgressDialog.h"
 
-#if 0
-#if defined(BUILDING_AUDACITY)
-#include "../../PlatformCompatibility.h"
-
-// Make the main function private
-#else
-#define USE_VST 1
-#endif
-#endif
-
 #if USE_VST
 
 #include <limits.h>
@@ -94,7 +84,7 @@
 #include "../../widgets/WindowAccessible.h"
 #endif
 
-#include "audacity/ConfigInterface.h"
+#include "tenacity/ConfigInterface.h"
 
 #include <cstring>
 

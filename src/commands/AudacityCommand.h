@@ -20,8 +20,8 @@
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
-#include "../include/audacity/ComponentInterface.h"
-#include "../include/audacity/EffectAutomationParameters.h" // for command automation
+#include "../include/tenacity/ComponentInterface.h"
+#include "../include/tenacity/EffectAutomationParameters.h" // for command automation
 
 #include "../Registrar.h"
 
@@ -36,7 +36,7 @@ class EffectUIHostInterface;
 class ProgressDialog;
 
 
-class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
+class TENACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
                                 public ComponentInterface
 {
  public:
@@ -139,7 +139,7 @@ private:
 
 
 // Base dialog for command dialog.
-class AUDACITY_DLL_API AudacityCommandDialog /* not final */ : public wxDialogWrapper
+class TENACITY_DLL_API AudacityCommandDialog /* not final */ : public wxDialogWrapper
 {
 public:
    // constructors and destructors

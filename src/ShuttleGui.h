@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   ShuttleGui.h
 
@@ -28,6 +28,8 @@
 class ChoiceSetting;
 
 class wxArrayStringEx;
+class Plot;
+class SliderTextCtrl;
 
 
 const int nMaxNestedSizers = 20;
@@ -237,7 +239,7 @@ struct Item {
 
 }
 
-class AUDACITY_DLL_API ShuttleGuiBase /* not final */
+class TENACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
    ShuttleGuiBase(
@@ -255,13 +257,17 @@ public:
    void AddPrompt(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddUnits(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
-   wxWindow * AddWindow(wxWindow * pWindow);
+   wxWindow * AddWindow(wxWindow* pWindow, int PositionFlags = wxALIGN_CENTRE);
    wxSlider * AddSlider(
       const TranslatableString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const TranslatableString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const TranslatableString &Prompt,
       int Value, int Max, int Min);
    wxTreeCtrl * AddTree();
+
+   SliderTextCtrl* AddSliderTextCtrl(
+      const TranslatableString &Prompt, double pos, double Max, double Min = 0,
+      int precision = 2, double* value = NULL, double scale = 0, double offset = 0);
 
    // Pass the same initValue to the sequence of calls to AddRadioButton and
    // AddRadioButtonToGroup.
@@ -343,14 +349,23 @@ public:
    void AddConstTextBox(
       const TranslatableString &Caption, const TranslatableString & Value );
 
+   Plot* AddPlot( const TranslatableString &Prompt,
+      double x_min, double x_max, double y_min, double y_max,
+      const TranslatableString& x_label, const TranslatableString& y_label,
+      int x_format = 1, int y_format = 1, int count = 1 );
+
 //-- Start and end functions.  These are used for sizer, or other window containers
 //   and create the appropriate widget.
    void StartHorizontalLay(int PositionFlags=wxALIGN_CENTRE, int iProp=1);
    void EndHorizontalLay();
+
    void StartVerticalLay(int iProp=1);
    void StartVerticalLay(int PositionFlags, int iProp);
-
    void EndVerticalLay();
+
+   void StartWrapLay(int PositionFlags=wxEXPAND, int iProp = 0);
+   void EndWrapLay();
+
    wxScrolledWindow * StartScroller(int iStyle=0);
    void EndScroller();
    wxPanel * StartPanel(int iStyle=0);
@@ -482,6 +497,7 @@ public:
       const int min);
 //-- End of variants.
    void SetBorder( int Border ) {miBorder = Border;};
+   int GetBorder() const noexcept;
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );
@@ -616,12 +632,20 @@ enum
    eCloseID       = wxID_CANCEL
 };
 
-AUDACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent,
+enum
+{
+    // Prop() sets the proportion value, defined as in wxSizer::Add().
+    // These are enum values for representing the magic values better
+    MINIMUM_PROPORTION = 0,
+    GROWING_PROPORTION = 1
+};
+
+TENACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent,
                                long buttons = eOkButton | eCancelButton,
                                wxWindow *extra = NULL );
 
 // ShuttleGui extends ShuttleGuiBase with Audacity specific extensions.
-class AUDACITY_DLL_API ShuttleGui /* not final */ : public ShuttleGuiBase
+class TENACITY_DLL_API ShuttleGui /* not final */ : public ShuttleGuiBase
 {
 public:
    ShuttleGui(
@@ -717,7 +741,7 @@ public:
 
    // Prop() sets the proportion value, defined as in wxSizer::Add().
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
-
+   
    ShuttleGui & Style( long iStyle )
    {
       std::move( mItem ).Style( iStyle );
@@ -749,10 +773,10 @@ public:
 class ComponentInterfaceSymbol;
 
 //! Convenience function often useful when adding choice controls
-AUDACITY_DLL_API TranslatableStrings Msgids(
+TENACITY_DLL_API TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
 
 //! Convenience function often useful when adding choice controls
-AUDACITY_DLL_API TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
+TENACITY_DLL_API TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
 
 #endif

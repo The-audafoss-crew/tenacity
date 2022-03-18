@@ -108,20 +108,16 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
          const auto pTrackView = dynamic_cast<TrackView*>(&cell);
          if (!pTrackView)
             return;
-         const auto pTrack = pTrackView->FindTrack();
-         if (pTrack->GetSelected() ||
-             TrackFocus::Get( *mProject ).IsFocused( pTrack.get() ))
-         {
+         auto r = tp->GetRect();
             // AColor::Line includes both endpoints so use GetBottom()
-            AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
+         AColor::Line(dc, mLastCursorX, r.GetTop(), mLastCursorX, r.GetBottom());
             // ^^^ The whole point of this routine.
 
-         }
       } );
    }
    else if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
-      dc.SetPen(*wxBLACK_PEN);
+      AColor::CursorColor(&dc);
       // AColor::Line includes both endpoints so use GetBottom()
       auto rect = ruler->GetInnerRect();
       AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());

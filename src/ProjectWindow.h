@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 ProjectWindow.h
 
@@ -26,7 +26,7 @@ void InitProjectWindow( ProjectWindow &window );
 
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
-class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
+class TENACITY_DLL_API ProjectWindow final : public ProjectWindowBase
    , public TrackPanelListener
    , public PrefsListener
 {

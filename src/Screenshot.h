@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   Screenshot.h
 
@@ -25,7 +25,7 @@
 
 class AudacityProject;
 
-AUDACITY_DLL_API void OpenScreenshotTools( AudacityProject &project );
+TENACITY_DLL_API void OpenScreenshotTools( AudacityProject &project );
 void CloseScreenshotTools();
 
 #endif // __AUDACITY_SCREENSHOT__

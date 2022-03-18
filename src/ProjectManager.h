@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 ProjectManager.h
 
@@ -26,7 +26,7 @@ struct AudioIOStartStreamOptions;
 ///\brief Object associated with a project for high-level management of the
 /// project's lifetime, including creation, destruction, opening from file,
 /// importing, pushing undo states, and reverting to saved states
-class AUDACITY_DLL_API ProjectManager final
+class TENACITY_DLL_API ProjectManager final
    : public wxEvtHandler
    , public ClientData::Base
 {

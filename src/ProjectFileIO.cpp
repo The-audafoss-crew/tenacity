@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Tenacity
 
 ProjectFileIO.cpp
 
@@ -1417,7 +1417,7 @@ void ProjectFileIO::SetProjectTitle(int number)
    if (number >= 0)
    {
       name =
-      /* i18n-hint: The %02i is the project number, the %s is the project name.*/
+      /* i18n-hint: The %02i is the project number. This is followed by the project name in quotes as a %s.*/
       XO("[Project %02i] Audacity \"%s\"")
          .Format( number + 1,
                  name.empty() ? XO("<untitled>") : Verbatim((const char *)name))
@@ -1426,7 +1426,7 @@ void ProjectFileIO::SetProjectTitle(int number)
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if (name.empty())
    {
-      name = _TS("Audacity");
+      name = XO("Audacity").Translation();
    }
 
    if (mRecovered)
@@ -2388,6 +2388,12 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /*
    int64_t found = 0;
    int64_t right = 0;
    int rc;
+
+   // "sqlite_dbpage" is a compile-time defined option
+   if(!sqlite3_compileoption_used("SQLITE_ENABLE_DBPAGE_VTAB"))
+   {
+       return 0;
+   }
 
    // Get the rootpage for the sampleblocks table.
    sqlite3_stmt *stmt =

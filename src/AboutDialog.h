@@ -1,15 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   AboutDialog.h
 
-  Dominic Mazzoni
-
 **********************************************************************/
 
-#ifndef __AUDACITY_ABOUT_DLG__
-#define __AUDACITY_ABOUT_DLG__
+#ifndef TENACITY_ABOUT_DLG
+#define TENACITY_ABOUT_DLG
 
 #include <vector>
 #include "widgets/wxPanelWrapper.h" // to inherit
@@ -19,56 +17,77 @@ class wxTextOutputStream;
 
 class ShuttleGui;
 
-struct AboutDialogCreditItem {
-   AboutDialogCreditItem( TranslatableString str, int r )
-      : description{ std::move( str ) }, role{ r }
-   {}
-   TranslatableString description;
-   int role;
+struct AboutDialogCreditItem
+{
+    AboutDialogCreditItem(TranslatableString str, int r) : description{std::move(str)},
+        role{r}{ }
+    TranslatableString description;
+    int role;
 };
 
 using AboutDialogCreditItemsList = std::vector<AboutDialogCreditItem>;
 
-class AUDACITY_DLL_API AboutDialog final : public wxDialogWrapper {
-   DECLARE_DYNAMIC_CLASS(AboutDialog)
+class TENACITY_DLL_API AboutDialog final : public wxDialogWrapper{
+    DECLARE_DYNAMIC_CLASS(AboutDialog)
 
- public:
-   AboutDialog(wxWindow * parent);
-   virtual ~ AboutDialog();
+    public:
 
-   static AboutDialog *ActiveIntance();
+    static constexpr int ABOUT_DIALOG_WIDTH = 506;
+    static constexpr int ABOUT_DIALOG_HEIGHT = 359;
+    static const inline wxSize ABOUT_DIALOG_DEFAULT_SIZE = wxSize(ABOUT_DIALOG_WIDTH, ABOUT_DIALOG_HEIGHT);
 
-   void OnOK(wxCommandEvent & event);
+    AboutDialog() : AboutDialog(nullptr){};
+    AboutDialog(wxWindow * parent);
+    virtual ~AboutDialog();
+    void OnOK(wxCommandEvent& event);
 
-   wxStaticBitmap *icon;
+    DECLARE_EVENT_TABLE()
 
-   DECLARE_EVENT_TABLE()
+    private:
 
- private:
-   enum Role {
-      roleTeamMember,
-      roleEmeritusTeam,
-      roleDeceased,
-      roleContributor,
-      roleGraphics,
-      roleLibrary,
-      roleThanks
-   };
+    wxStaticBitmap* icon;
 
-   AboutDialogCreditItemsList creditItems;
-   void PopulateAudacityPage( ShuttleGui & S );
-   void PopulateLicensePage( ShuttleGui & S );
-   void PopulateInformationPage (ShuttleGui & S );
+    enum Role
+    {
+        roleTenacityTeamMember,
+        roleTenacityThanks,
+        roleLibrary,
+        rolePreforkTeamMember,
+        rolePreforkEmeritusTeam,
+        rolePreforkDeceased,
+        rolePreforkContributor,
+        rolePreforkGraphics,
+        rolePreforkThanks
+    };
 
-   void CreateCreditsList();
-   void AddCredit( const wxString &name, Role role );
-   void AddCredit( const wxString &name, TranslatableString format, Role role );
-   wxString GetCreditsByRole(AboutDialog::Role role);
+    AboutDialogCreditItemsList creditItems;
+    void CreateTenacityTab(ShuttleGui & S);
+    void CreateLicenseTab(ShuttleGui & S);
+    void CreateInformationTab(ShuttleGui & S);
 
-   void AddBuildinfoRow( wxTextOutputStream *str, const wxChar * libname,
-      const TranslatableString &libdesc, const TranslatableString &status);
-   void AddBuildinfoRow( wxTextOutputStream *str,
-      const TranslatableString &description, const wxChar *spec);
+    static wxImage GenerateTenacityLogoRescaledImage(const float fScale);
+    void GenerateTenacityPageDescription(wxTextOutputStream & tos);
+    void GenerateTenacityTeamMembersInfo(wxTextOutputStream & tos);
+    void GenerateTenacitySpecialThanksInfo(wxTextOutputStream & tos);
+    void GenerateTenacityLibsInfo(wxTextOutputStream & tos);
+
+    void GeneratePreforkSubheader(wxTextOutputStream & tos);
+    void GeneratePreforkTeamMembersInfo(wxTextOutputStream & tos);
+    void GeneratePreforkEmeritusInfo(wxTextOutputStream & tos);
+    void GeneratePreforkContributorInfo(wxTextOutputStream & tos);
+    void GeneratePreforkGraphicsInfo(wxTextOutputStream & tos);
+    void GeneratePreforkTranslatorsInfo(wxTextOutputStream & tos);
+    void GeneratePreforkSpecialThanksInfo(wxTextOutputStream & tos);
+    void GeneratePreforkWebsiteInfo(wxTextOutputStream & tos);
+    void GeneratePreforkTrademarkDisclaimer(wxTextOutputStream & tos);
+
+    void PopulateCreditsList();
+    void AddCredit(const wxString & name, Role role);
+    void AddCredit(const wxString & name, TranslatableString format, Role role);
+    wxString GetCreditsByRole(Role role);
+
+    static void AddBuildInfoRow(wxTextOutputStream * str, const wxChar * libname, const TranslatableString & libdesc, const TranslatableString & status);
+    static void AddBuildInfoRow(wxTextOutputStream * str, const TranslatableString & description, const wxChar * spec);
 };
 
 #endif

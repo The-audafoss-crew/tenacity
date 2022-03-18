@@ -15,6 +15,9 @@ Resolves: *(direct link to the issue)*
 an asterisk (*) after the entry indicates required
 -->
 
+<details>
+<summary>Checklist</summary>
+
 - [ ] I have signed off my commits using `-s` or `Signed-off-by`\* (See: [Contributing § DCO](https://github.com/tenacityteam/tenacity/blob/master/CONTRIBUTING.md#developer-certificate-of-origin))
 - [ ] I made sure the code compiles on my machine
 - [ ] I made sure there are no unnecessary changes in the code\*
@@ -22,3 +25,5 @@ an asterisk (*) after the entry indicates required
 - [ ] I made sure the commit message(s) contain a description and answer the question "Why do those changes fix that particular issue?" or "Why are those changes really necessary as improvements?"\*
 
 \* indicates required
+
+</details>

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   PluginManager.h
 
@@ -17,9 +17,8 @@
 #include <map>
 #include <memory>
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ImporterInterface.h"
-#include "audacity/PluginInterface.h"
+#include "tenacity/EffectInterface.h"
+#include "tenacity/PluginInterface.h"
 
 class wxArrayString;
 class FileConfig;
@@ -41,7 +40,7 @@ typedef enum : unsigned {
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
-class AUDACITY_DLL_API PluginDescriptor
+class TENACITY_DLL_API PluginDescriptor
 {
 public:
    PluginDescriptor();
@@ -171,7 +170,7 @@ typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
-class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
+class TENACITY_DLL_API PluginManager final : public PluginManagerInterface
 {
 public:
 
@@ -186,7 +185,6 @@ public:
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
    const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) override;
 
    void FindFilesInPathList(const wxString & pattern,
                                     const FilePaths & pathList,
@@ -238,9 +236,9 @@ public:
 
    static PluginManager & Get();
 
+   static PluginID GetID(ModuleInterface *module);
    static PluginID GetID(ComponentInterface *command);
    static PluginID GetID(EffectDefinitionInterface *effect);
-   static PluginID GetID(ImporterInterface *importer);
 
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions

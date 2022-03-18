@@ -1,7 +1,7 @@
 
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Tenacity
 
   AColor.cpp
 
@@ -22,6 +22,7 @@ It is also a place to document colour usage policy in Audacity
 #include "AColorResources.h"
 
 
+#include <algorithm>
 #include <wx/window.h>
 #include <wx/colour.h>
 #include <wx/dc.h>
@@ -258,6 +259,7 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
 
    wxColour col;
    col = Blend( theTheme.Colour( clrTrackInfo ), up ? wxColour( 255,255,255):wxColour(0,0,0));
+   col = Blend( theTheme.Colour( clrTrackInfo ), col);
 
    wxPen pen( highlight ? uglyPen : col );
    dc.SetPen( pen );
@@ -266,6 +268,7 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
    dc.DrawLine(r.x, r.y, r.x, r.y + r.height);
 
    col = Blend( theTheme.Colour( clrTrackInfo ), up ? wxColour(0,0,0): wxColour(255,255,255));
+   col = Blend( theTheme.Colour( clrTrackInfo ), col);
 
    pen.SetColour( col );
    dc.SetPen( highlight ? uglyPen : pen );
@@ -467,7 +470,7 @@ wxColour CursorColour( )
 
    // Pen colour is fine, if there is plenty of contrast.
    if( d  > 200 )
-      return clrCursorPen;
+      return theTheme.Colour( clrCursorPen );
 
    // otherwise return same colour as a selection.
    return theTheme.Colour( clrSelected );
